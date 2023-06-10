@@ -24,21 +24,7 @@ class UserController extends Controller
 
     public function index()
     {
-        // $mgClient = new Mailgun('d28881457d3002e69168a06a1d4f3bc5-d1a07e51-bc9b524e');
-        // $domain = "sandboxbcf29f4b57684ea59f461fe341b68eda.mailgun.org";
-       
 
-        $mgClient = Mailgun::create('d28881457d3002e69168a06a1d4f3bc5-d1a07e51-bc9b524e');
-        $domain = "sandboxbcf29f4b57684ea59f461fe341b68eda.mailgun.org";
-        $params = array(
-          'from'    => 'ga17033@ues.edu.sv',
-          'to'      => 'cs11004@ues.edu.sv',
-          'subject' => 'Hello',
-          'text'    => 'Testing some Mailgun awesomness!'
-        );
-        
-        # Make the call to the client.
-        $mgClient->messages()->send($domain, $params);
     }
 
     /**
