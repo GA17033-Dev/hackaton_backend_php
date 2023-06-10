@@ -1,0 +1,23 @@
+# Created by https://www.toptal.com/developers/gitignore/api/laravel
+# Edit at https://www.toptal.com/developers/gitignore?templates=laravel
+
+### Laravel ###
+/vendor/
+node_modules/
+
+storage/*.key
+.env
+
+
+# api-docs json swagger
+storage/api-docs/api-docs.json
+resources/views/vendor/swagger-lume/index.blade.php
+config/swagger-lume.php
+
+
+composer.lock
+
+# End of https://www.toptal.com/developers/gitignore/api/laravel
+
+.DS_Store
+**/.DS_Store
