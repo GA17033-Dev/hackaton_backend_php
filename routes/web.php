@@ -33,6 +33,9 @@ $router->group([
 $router->post('registro', 'UserController@store');
 $router->get('api/roles', 'UserController@index');
 $router->get('api/paises', 'CatalogoController@paises');
+$router->get('api/departamentos', 'CatalogoController@departamentos');
+$router->get('api/municipios', 'CatalogoController@municipios');
+$router->get('api/departamento/get/by/id/{id}', 'CatalogoController@municipiosById');
 
 $router->get('email/test', 'UserController@index');
 $router->get('usuario/profile', ['middleware' => 'Auth', 'uses' => 'UserController@profile']);
