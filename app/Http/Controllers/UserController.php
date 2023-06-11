@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Response;
 use App\Models\User;
+use App\Models\Medico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -149,7 +150,7 @@ class UserController extends Controller
 
     /**
      *
-     *  @OA\Post(path="/api/register/user",
+     *  @OA\Post(path="/api/register/medico",
      *     tags={"Usuarios"},
      *     description="Registra un usuario",
      *     summary="Registra un usuario",
@@ -244,6 +245,12 @@ class UserController extends Controller
      *                 description="Género del usuario",
      *                 type="integer"
      *             ),
+     * @OA\Property(
+     *                 property="idespecialidad",
+     *                 description="Especialidad del usuario",
+     *                 type="integer"
+     *             ),
+     * 
      *         )
      *     )
      *  )
@@ -259,6 +266,7 @@ class UserController extends Controller
             'edad' => 'required',
             'telefono' => 'required|unique:Usuarios',
             'idgenero' => 'required',
+            'idespecialidad' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -267,11 +275,16 @@ class UserController extends Controller
         //validar idgenero
         $validar_genero = DB::table('Generos')->where('idgenero', $request->idgenero)->first();
 
+
         if (!$validar_genero) {
             return Response::respuesta(Response::retError, "El género no existe");
         }
 
+        $validar_especialidad = DB::table('Especialidades')->where('idespecialidad', $request->idespecialidad)->first();
 
+        if (!$validar_especialidad) {
+            return Response::respuesta(Response::retError, "La especialidad no existe");
+        }
         $user = new User();
         $user->apellido = $request->apellido;
         $user->nombre = $request->nombre;
@@ -286,9 +299,13 @@ class UserController extends Controller
         $user->idrol = 11;
         $user->idgenero = $request->idgenero;
         if ($user->save()) {
-            return Response::respuesta(Response::retOK, $user);
+            $medico = new Medico();
+            $medico->idusuario = $user->idusuario;
+            $medico->idespecialidad = $request->idespecialidad;
+            $medico->save();
+            return Response::respuesta(Response::retOK, 'Medico creado correctamente');
         } else {
-            return Response::respuesta(Response::retError, "Error al guardar el usuario");
+            return Response::respuesta(Response::retError, "Error al crear el medico");
         }
     }
 
