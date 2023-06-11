@@ -9,5 +9,5 @@ class Pacientes extends Model
     protected $table = 'Pacientes';
     protected $primaryKey = 'idpaciente';
     //timestamps
-    public $timestamps = false;
+    public $timestamps = true;
 }

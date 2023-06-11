@@ -41,6 +41,9 @@ $router->get('api/consultorios', 'CatalogoController@consultorios');
 $router->get('api/medicos', 'CatalogoController@medicos');
 $router->get('api/medicos/especialidad/{id_especialidad}', 'CatalogoController@byEspecialidad');
 
+///api/register/paciente
+$router->post('api/register/paciente', 'PacienteController@register');
+
 $router->get('email/test', 'UserController@index');
 $router->get('usuario/profile', ['middleware' => 'Auth', 'uses' => 'UserController@profile']);
 

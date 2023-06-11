@@ -296,7 +296,7 @@ class UserController extends Controller
         $user->edad = $request->edad;
         $user->telefono = $request->telefono;
         $user->activo = 1;
-        $user->idrol = 11;
+        $user->idrol = 12;
         $user->idgenero = $request->idgenero;
         if ($user->save()) {
             $medico = new Medico();
