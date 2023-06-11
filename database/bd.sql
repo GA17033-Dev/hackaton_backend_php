@@ -616,3 +616,14 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+INSERT INTO Horarios (dia_semana, hora_inicio, hora_fin) VALUES
+  ( 'Lunes', '08:00:00', '12:00:00'),
+  ( 'Martes', '09:30:00', '13:30:00'),
+  ( 'Miércoles', '14:00:00', '18:00:00'),
+  ( 'Jueves', '10:00:00', '14:00:00'),
+  ( 'Viernes', '16:00:00', '20:00:00'),
+  ( 'Sábado', '08:00:00', '12:00:00'),
+  ( 'Domingo', '09:00:00', '13:00:00'),
+  ( 'Lunes', '13:30:00', '17:30:00'),
+  ( 'Martes', '16:00:00', '20:00:00'),
+  ( 'Miércoles', '10:30:00', '14:30:00');

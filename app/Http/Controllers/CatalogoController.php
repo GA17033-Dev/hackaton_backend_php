@@ -294,4 +294,248 @@ class CatalogoController extends Controller
 
         return Response::respuesta(Response::retOK, $generos);
     }
+
+
+    /**
+     *
+     *  @OA\Get(path="/api/especialidades",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve el listado de las especialidades",
+     *     operationId="especialidades",
+     *     summary="Muestra las especialidades",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de las especialidades",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+    public function especialidades()
+    {
+        $especialidades = DB::table('Especialidades')->get();
+
+        return Response::respuesta(Response::retOK, $especialidades);
+    }
+
+
+
+
+    /**
+     *
+     *  @OA\Get(path="/api/consultorios",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve el listado de los consultorios",
+     *     operationId="consultorios",
+     *     summary="Muestra los consultorios",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de los consultorios",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+
+    public function consultorios()
+    {
+        $consultorios = DB::table('Consultorios')->get();
+
+        return Response::respuesta(Response::retOK, $consultorios);
+    }
+
+
+
+    /**
+     *
+     *  @OA\Get(path="/api/medicos",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve el listado de los medicos",
+     *     operationId="medicos",
+     *     summary="Muestra los medicos",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de los medicos",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+    public function medicos()
+    {
+        $medicos = DB::table('Medicos')
+            ->join('Usuarios', 'Medicos.idusuario', '=', 'Usuarios.idusuario')
+            ->select('Medicos.*', 'Usuarios.idrol', 'Usuarios.idgenero', 'Usuarios.nombre', 'Usuarios.apellido', 'Usuarios.usuario', 'Usuarios.edad', 'Usuarios.email', 'Usuarios.telefono', 'Usuarios.activo', 'Usuarios.created_at', 'Usuarios.updated_at')
+            ->get();
+
+        return Response::respuesta(Response::retOK, $medicos);
+    }
+    /**
+     *
+     *  @OA\Get(path="/api/medicos/especialidad/{id_especialidad}",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve el listado de los medicos por especialidad",
+     *     summary="Muestra los medicos por especialidad",
+     *     operationId="medicos/especialidad/{id}",
+     *     @OA\Parameter(
+     *         name="id_especialidad",
+     *         in="path",
+     *         description="Id de la especialidad",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de los medicos por especialidad",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="array",
+     *                  @OA\Items(
+     *                      @OA\Property(property ="id",type="integer",description="Id de rol"),
+     *                      @OA\Property(property ="rol_nombre",type="string",description="Nombre del rol"),
+     *                      @OA\Property(property ="rol",type="string",description="Nombre del rol strtolower"),
+     *                  ),
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+    public function byEspecialidad($id_especialidad)
+    {
+        $medicos = DB::table('Medicos')
+            ->join('Usuarios', 'Medicos.idusuario', '=', 'Usuarios.idusuario')
+            ->join('Especialidades', 'Medicos.idespecialidad', '=', 'Especialidades.idespecialidad')
+            ->select('Especialidades.*','Medicos.*', 'Usuarios.idrol', 'Usuarios.idgenero', 'Usuarios.nombre', 'Usuarios.apellido', 'Usuarios.usuario', 'Usuarios.edad', 'Usuarios.email', 'Usuarios.telefono', 'Usuarios.activo', 'Usuarios.created_at', 'Usuarios.updated_at')
+            ->where('Medicos.idespecialidad', '=', $id_especialidad)
+            ->get();
+
+        return Response::respuesta(Response::retOK, $medicos);
+    }
 }

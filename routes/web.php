@@ -37,6 +37,10 @@ $router->get('api/departamentos', 'CatalogoController@departamentos');
 $router->get('api/municipios', 'CatalogoController@municipios');
 $router->get('api/departamento/get/by/id/{id}', 'CatalogoController@municipiosById');
 $router->get('api/generos', 'CatalogoController@generos');
+$router->get('api/especialidades', 'CatalogoController@especialidades');
+$router->get('api/consultorios', 'CatalogoController@consultorios');
+$router->get('api/medicos', 'CatalogoController@medicos');
+$router->get('api/medicos/especialidad/{id_especialidad}', 'CatalogoController@byEspecialidad');
 
 $router->get('email/test', 'UserController@index');
 $router->get('usuario/profile', ['middleware' => 'Auth', 'uses' => 'UserController@profile']);
