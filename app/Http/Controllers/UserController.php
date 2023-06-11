@@ -264,6 +264,12 @@ class UserController extends Controller
         if ($validator->fails()) {
             return Response::respuesta(Response::retError, $validator->errors());
         }
+        //validar idgenero
+        $validar_genero = DB::table('Generos')->where('idgenero', $request->idgenero)->first();
+
+        if (!$validar_genero) {
+            return Response::respuesta(Response::retError, "El género no existe");
+        }
 
 
         $user = new User();
