@@ -12,6 +12,8 @@ use Mailgun\Mailgun;
 use Illuminate\Support\Facades\DB;
 use Mailgun\HttpClient\HttpClientConfigurator;
 use Mailgun\Hydrator\NoopHydrator;
+//validate
+use Illuminate\Support\Facades\Validator;
 
 
 class UserController extends Controller
@@ -143,19 +145,153 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+
+    /**
+     *
+     *  @OA\Post(path="/api/register/user",
+     *     tags={"Usuarios"},
+     *     description="Registra un usuario",
+     *     summary="Registra un usuario",
+     *     operationId="register",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el usuario registrado",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="access_token",
+     *                  type="string",
+     *                  description="Bearer token"
+     *              ),
+     *              @OA\Property(
+     *                  property="token_type",
+     *                  type="string",
+     *                  description="Token type"
+     *              ),
+     *              @OA\Property(
+     *                  property="user",
+     *                  type="string",
+     *                  description="Datos del usuario",
+     *                
+     *              ),
+     *              @OA\Property(
+     *                  property="expires_in",
+     *                  type="integer",
+     *                  description="Duración token"
+     *              ),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Mensaje de error de privilegios insuficientes")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     *
+     *     @OA\RequestBody(
+     *     description="Credenciales de ingreso",
+     *     required=true,
+     *     @OA\MediaType(
+     *         mediaType="application/json",
+     *         @OA\Schema(
+     *             type="object",
+     *             required ={"usuario","password"},
+     *              @OA\Property(
+     *                 property="apellido",
+     *                 description="Apellido del usuario",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="nombre",
+     *                 description="Nombre del usuario",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="email",
+     *                 description="Correo electrónico del usuario",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="password",
+     *                 description="Cláve de ingreso al sistema",
+     *                 type="string"
+     *             ),
+     *  @OA\Property(
+     *                 property="telefono",
+     *                 description="Teléfono del usuario",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="edad",
+     *                 description="Edad del usuario",
+     *                 type="integer"
+     *             ),
+     *              @OA\Property(
+     *                 property="idgenero",
+     *                 description="Género del usuario",
+     *                 type="integer"
+     *             ),
+     *         )
+     *     )
+     *  )
+     * )
+     */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'apellido' => 'required',
+            'nombre' => 'required',
+            'email' => 'required|email|unique:Usuarios',
+            'password' => 'required',
+            'edad' => 'required',
+            'telefono' => 'required|unique:Usuarios',
+            'idgenero' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::respuesta(Response::retError, $validator->errors());
+        }
+
+
         $user = new User();
-        $user->name = $request->name;
-        $user->lastname = $request->lastname;
+        $user->apellido = $request->apellido;
+        $user->nombre = $request->nombre;
+
+        $usuario = $this->generar_usuario($request->nombre, $request->apellido);
+        $user->usuario = $usuario;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->estado = 1;
+        $user->edad = $request->edad;
+        $user->telefono = $request->telefono;
+        $user->activo = 1;
+        $user->idrol = 11;
+        $user->idgenero = $request->idgenero;
         if ($user->save()) {
             return Response::respuesta(Response::retOK, $user);
         } else {
-            return Response::respuesta(Response::retError, $user);
+            return Response::respuesta(Response::retError, "Error al guardar el usuario");
         }
+    }
+
+
+    public function generar_usuario($nombre, $apellido)
+    {
+        //generar un usuario ramdon con el nombre y apellido y un numero
+        $usuario = strtolower(substr($nombre, 0, 1) . $apellido . rand(1, 100));
+        return $usuario;
     }
 
     /**
