@@ -49,5 +49,5 @@ $router->get('email/test', 'UserController@index');
 $router->get('usuario/profile', ['middleware' => 'Auth', 'uses' => 'UserController@profile']);
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return 'Api Restful Lumen 8.0';
 });
