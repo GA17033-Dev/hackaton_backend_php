@@ -168,8 +168,8 @@ class PacienteController extends Controller
             'direccion_detalle' => 'required',
             'medico_encargado' => 'required',
             'observaciones' => 'required',
-            'idconsultorio' => 'required|integer',
-            'idmedico' => 'required|integer',
+            // 'idconsultorio' => 'required|integer',
+          //  'idmedico' => 'required|integer',
             'email' => 'required|email|unique:Pacientes,email',
         ]);
 
@@ -188,15 +188,15 @@ class PacienteController extends Controller
             return Response::respuesta(Response::retError, "El genero no existe");
         }
 
-        $validate_consultorio = DB::table('Consultorios')->where('idconsultorio', $request->idconsultorio)->first();
-        if (!$validate_consultorio) {
-            return Response::respuesta(Response::retError, "El consultorio no existe");
-        }
+        // $validate_consultorio = DB::table('Consultorios')->where('idconsultorio', $request->idconsultorio)->first();
+        // if (!$validate_consultorio) {
+        //     return Response::respuesta(Response::retError, "El consultorio no existe");
+        // }
 
-        $validate_medico = DB::table('Medicos')->where('idmedico', $request->idmedico)->first();
-        if (!$validate_medico) {
-            return Response::respuesta(Response::retError, "El medico no existe");
-        }
+        // $validate_medico = DB::table('Medicos')->where('idmedico', $request->idmedico)->first();
+        // if (!$validate_medico) {
+        //     return Response::respuesta(Response::retError, "El medico no existe");
+        // }
         $paciente = new Pacientes();
         $paciente->idtipoSangre = $request->idtipoSangre;
         $paciente->idgenero = $request->idgenero;
@@ -212,15 +212,15 @@ class PacienteController extends Controller
         $paciente->activo  = 1;
         $paciente->observaciones = $request->observaciones;
         $paciente->save();
-        if ($paciente->save()) {
-            $consultorioDetalle = new ConsultoriosDetalle();
-            $consultorioDetalle->idpaciente = $paciente->idpaciente;
-            $consultorioDetalle->idconsultorio = $request->idconsultorio;
-            $consultorioDetalle->idmedico = $request->idmedico;
-            $consultorioDetalle->save();
+        // if ($paciente->save()) {
+        //     $consultorioDetalle = new ConsultoriosDetalle();
+        //     $consultorioDetalle->idpaciente = $paciente->idpaciente;
+        //     $consultorioDetalle->idconsultorio = $request->idconsultorio;
+        //     $consultorioDetalle->idmedico = $request->idmedico;
+        //     $consultorioDetalle->save();
 
-            return Response::respuesta(Response::retOK, "Paciente registrado correctamente");
-        }
+        return Response::respuesta(Response::retOK, "Paciente registrado correctamente");
+        // }
         return Response::respuesta(Response::retOK, "Paciente registrado correctamente");
     }
 }

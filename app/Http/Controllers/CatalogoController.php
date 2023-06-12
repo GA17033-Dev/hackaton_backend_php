@@ -532,10 +532,66 @@ class CatalogoController extends Controller
         $medicos = DB::table('Medicos')
             ->join('Usuarios', 'Medicos.idusuario', '=', 'Usuarios.idusuario')
             ->join('Especialidades', 'Medicos.idespecialidad', '=', 'Especialidades.idespecialidad')
-            ->select('Especialidades.*','Medicos.*', 'Usuarios.idrol', 'Usuarios.idgenero', 'Usuarios.nombre', 'Usuarios.apellido', 'Usuarios.usuario', 'Usuarios.edad', 'Usuarios.email', 'Usuarios.telefono', 'Usuarios.activo', 'Usuarios.created_at', 'Usuarios.updated_at')
+            ->select('Especialidades.*', 'Medicos.*', 'Usuarios.idrol', 'Usuarios.idgenero', 'Usuarios.nombre', 'Usuarios.apellido', 'Usuarios.usuario', 'Usuarios.edad', 'Usuarios.email', 'Usuarios.telefono', 'Usuarios.activo', 'Usuarios.created_at', 'Usuarios.updated_at')
             ->where('Medicos.idespecialidad', '=', $id_especialidad)
             ->get();
 
         return Response::respuesta(Response::retOK, $medicos);
+    }
+
+
+
+    /**
+     *
+     *  @OA\Get(path="/api/tipos/sangre",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve el listado de los tipos de sangre",
+     *     operationId="tipos/sangre",
+     *     summary="Muestra los tipos de sangre",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de los tipos de sangre",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+    public function tiposSangre()
+    {
+        $tiposSangre = DB::table('TiposSangre')->get();
+
+        return Response::respuesta(Response::retOK, $tiposSangre);
     }
 }

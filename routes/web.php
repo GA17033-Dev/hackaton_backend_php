@@ -40,6 +40,7 @@ $router->get('api/especialidades', 'CatalogoController@especialidades');
 $router->get('api/consultorios', 'CatalogoController@consultorios');
 $router->get('api/medicos', 'CatalogoController@medicos');
 $router->get('api/medicos/especialidad/{id_especialidad}', 'CatalogoController@byEspecialidad');
+$router->get('api/tipos/sangre', 'CatalogoController@tiposSangre');
 
 ///api/register/paciente
 $router->post('api/register/paciente', 'PacienteController@register');
