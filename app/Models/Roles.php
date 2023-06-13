@@ -6,20 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Roles extends Model
 {
-    protected $table = 'Roles';
-    protected $primaryKey = 'idrol';
+    protected $table = 'roles';
+
+    protected $fillable = ['rol_nombre'];
+
+    protected $primaryKey = 'id';
+
+    protected $appends = ['rol'];
+
+    // exclude created_at and Updated_at field in entity
     public $timestamps = false;
 
-    protected $fillable = [
-        'nombre',
-    ];
-
-    protected $hidden = [
-        'idrol',
-    ];
-
-    public function usuarios()
+    function getRolAttribute()
     {
-         return $this->hasOne('App\Models\User', 'idrol', 'idrol');
+        return strtolower(preg_replace('/\s/', '-', $this->rol_nombre));
     }
+
+
 }

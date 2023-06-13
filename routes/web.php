@@ -29,7 +29,7 @@ $router->group([
  * Controlador usuario
  */
 
-$router->post('api/register/medico', 'UserController@store');
+$router->post('api/register/user', 'UserController@store');
 $router->get('api/roles', 'UserController@index');
 $router->get('api/paises', 'CatalogoController@paises');
 $router->get('api/departamentos', 'CatalogoController@departamentos');

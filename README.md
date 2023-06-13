@@ -34,4 +34,4 @@ The Lumen framework is open-sourced software licensed under the [MIT license](ht
 
 4-php artisan swagger-lume:generate
 
-5-php -S 172.16.50.93:8000  public/index.php"# hackaton_backend_php" 
+5-php -S localhost:8000  public/index.php"# hackaton_backend_php" 

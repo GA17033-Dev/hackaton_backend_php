@@ -13,8 +13,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable;
 
-    protected $table = 'Usuarios';
-    protected $primaryKey = 'idusuario';
+    protected $table = 'usuario';
+    protected $primaryKey = 'id';
     public $timestamps = true;
 
     /**
@@ -49,5 +49,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Roles::class, 'roles_usuario');
     }
 }

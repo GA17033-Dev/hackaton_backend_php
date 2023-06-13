@@ -8,6 +8,8 @@ use App\Models\Medico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\UsuarioRoles;
+use App\Models\Roles;
 use Mailgun\Mailgun;
 //DB
 use Illuminate\Support\Facades\DB;
@@ -150,7 +152,7 @@ class UserController extends Controller
 
     /**
      *
-     *  @OA\Post(path="/api/register/medico",
+     *  @OA\Post(path="/api/register/user",
      *     tags={"Usuarios"},
      *     description="Registra un usuario",
      *     summary="Registra un usuario",
@@ -241,15 +243,21 @@ class UserController extends Controller
      *                 type="integer"
      *             ),
      *              @OA\Property(
-     *                 property="idgenero",
+     *                 property="genero_id",
      *                 description="Género del usuario",
      *                 type="integer"
      *             ),
      * @OA\Property(
-     *                 property="idespecialidad",
-     *                 description="Especialidad del usuario",
+     *                 property="municipio_id",
+     *                 description="Municipio del usuario",
      *                 type="integer"
      *             ),
+     * @OA\Property(
+     *                 property="direccion",
+     *                 description="Dirección del usuario",
+     *                 type="string"
+     *             ),
+
      * 
      *         )
      *     )
@@ -261,52 +269,53 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'apellido' => 'required',
             'nombre' => 'required',
-            'email' => 'required|email|unique:Usuarios',
+            'email' => 'required|email|unique:usuario',
             'password' => 'required',
             'edad' => 'required',
-            'telefono' => 'required|unique:Usuarios',
-            'idgenero' => 'required',
-            'idespecialidad' => 'required',
+            'telefono' => 'required|unique:usuario',
+            'genero_id' => 'required',
+            'municipio_id' => 'required|integer',
+            'direccion' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return Response::respuesta(Response::retError, $validator->errors());
         }
         //validar idgenero
-        $validar_genero = DB::table('Generos')->where('idgenero', $request->idgenero)->first();
+        $validar_genero = DB::table('generos')->where('id', $request->genero_id)->first();
 
 
         if (!$validar_genero) {
             return Response::respuesta(Response::retError, "El género no existe");
         }
 
-        $validar_especialidad = DB::table('Especialidades')->where('idespecialidad', $request->idespecialidad)->first();
-
-        if (!$validar_especialidad) {
-            return Response::respuesta(Response::retError, "La especialidad no existe");
+        $validar_municipio = DB::table('municipios')->where('id', $request->municipio_id)->first();
+        if (!$validar_municipio) {
+            return Response::respuesta(Response::retError, "El municipio no existe");
         }
-        $user = new User();
-        $user->apellido = $request->apellido;
-        $user->nombre = $request->nombre;
 
-        $usuario = $this->generar_usuario($request->nombre, $request->apellido);
-        $user->usuario = $usuario;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->edad = $request->edad;
-        $user->telefono = $request->telefono;
-        $user->activo = 1;
-        $user->idrol = 12;
-        $user->idgenero = $request->idgenero;
-        if ($user->save()) {
-            $medico = new Medico();
-            $medico->idusuario = $user->idusuario;
-            $medico->idespecialidad = $request->idespecialidad;
-            $medico->save();
-            return Response::respuesta(Response::retOK, 'Medico creado correctamente');
-        } else {
-            return Response::respuesta(Response::retError, "Error al crear el medico");
+        try {
+            $user = new User();
+            $user->apellido = $request->apellido;
+            $user->nombre = $request->nombre;
+
+            $usuario = $this->generar_usuario($request->nombre, $request->apellido);
+            $user->usuario = $usuario;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->edad = $request->edad;
+            $user->telefono = $request->telefono;
+            $user->municipio_id = $request->municipio_id;
+            $user->direccion = $request->direccion;
+            $user->activo = 1;
+            $user->genero_id = $request->genero_id;
+            if ($user->save()) {
+                $user->roles()->attach(Roles::where('rol_nombre', 'ROLE_USER')->first());
+            }
+        } catch (\Exception $e) {
+            return Response::respuesta(Response::retError, $e->getMessage());
         }
+        return Response::respuesta(Response::retOK, "Usuario creado correctamente");
     }
 
 
