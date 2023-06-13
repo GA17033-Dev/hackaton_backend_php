@@ -112,7 +112,7 @@ class CatalogoController extends Controller
 
     public function departamentos()
     {
-        $departamentos = DB::table('Departamentos')->join('pais', 'pais.id', '=', 'Departamentos.id_pais')->get();
+        $departamentos = DB::table('departamento')->get();
 
         return Response::respuesta(Response::retOK, $departamentos);
     }
@@ -165,7 +165,7 @@ class CatalogoController extends Controller
      */
     public function municipios()
     {
-        $departamentos = DB::table('Municipios')->join('Departamentos', 'Departamentos.iddepartamento', '=', 'Municipios.iddepartamento')->get();
+        $departamentos = DB::table('municipios')->join('departamento', 'departamento.departamento_id', '=', 'municipios.departamento_id')->get();
 
         return Response::respuesta(Response::retOK, $departamentos);
     }
@@ -234,7 +234,7 @@ class CatalogoController extends Controller
 
     public function municipiosById($id)
     {
-        $departamentos = DB::table('Departamentos')->join('Municipios', 'Municipios.iddepartamento', '=', 'Departamentos.iddepartamento')->where('Departamentos.iddepartamento', $id)->get();
+        $departamentos = DB::table('municipios')->where('departamento_id', $id)->get();
 
         return Response::respuesta(Response::retOK, $departamentos);
     }
