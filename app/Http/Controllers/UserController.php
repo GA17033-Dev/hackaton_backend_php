@@ -77,7 +77,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roles = DB::table('Roles')->get();
+        $roles = DB::table('roles')->get();
         return Response::respuesta(Response::retOK, $roles);
     }
 
