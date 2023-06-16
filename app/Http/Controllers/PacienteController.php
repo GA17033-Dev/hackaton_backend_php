@@ -10,14 +10,14 @@ use App\Models\ConsultoriosDetalle;
 //use validator;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\Response;
-
+use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
 
 
 
-    
+
     public function register(Request $request)
     {
 
@@ -33,7 +33,7 @@ class PacienteController extends Controller
             'medico_encargado' => 'required',
             'observaciones' => 'required',
             // 'idconsultorio' => 'required|integer',
-          //  'idmedico' => 'required|integer',
+            //  'idmedico' => 'required|integer',
             'email' => 'required|email|unique:Pacientes,email',
         ]);
 
@@ -86,5 +86,352 @@ class PacienteController extends Controller
         return Response::respuesta(Response::retOK, "Paciente registrado correctamente");
         // }
         return Response::respuesta(Response::retOK, "Paciente registrado correctamente");
+    }
+
+
+
+
+    /**
+     *
+     *  @OA\Post(path="/api/register/enfermedades",
+     *     tags={"Enfermedades"},
+     *     description="Registra enfermedades del paciente",
+     *     summary="",
+     *     operationId="register",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Registro exitoso",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="access_token",
+     *                  type="string",
+     *                  description="Bearer token"
+     *              ),
+     *              @OA\Property(
+     *                  property="token_type",
+     *                  type="string",
+     *                  description="Token type"
+     *              ),
+     *              @OA\Property(
+     *                  property="user",
+     *                  type="string",
+     *                  description="Datos del usuario",
+     *                
+     *              ),
+     *              @OA\Property(
+     *                  property="expires_in",
+     *                  type="integer",
+     *                  description="Duración token"
+     *              ),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Mensaje de error de privilegios insuficientes")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     *
+     *     @OA\RequestBody(
+     *     description="Credenciales de ingreso",
+     *     required=true,
+     *     @OA\MediaType(
+     *         mediaType="application/json",
+     *         @OA\Schema(
+     *             type="object",
+     *             required ={"usuario","password"},
+     *            
+     *             @OA\Property(
+     *                 property="enfermedad_id",
+     *                 description="Id de la enfermedad",
+     *                 type="integer"
+     *             ),
+     *             @OA\Property(
+     *                 property="gravedad_id",
+     *                 description="Id de la gravedad",
+     *                 type="integer"
+     *             ),
+     *  @OA\Property(
+     *                 property="fecha_inicio",
+     *                 description="Fecha de inicio de la enfermedad",
+     *                 type="string",
+     *             ),
+     *     
+
+     * 
+     *         )
+     *     )
+     *  )
+     * )
+     */
+
+
+    public function enfermedades_paciente(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'enfermedad_id' => 'required|integer',
+            'gravedad_id' => 'required|integer',
+            'fecha_inicio' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::respuesta(Response::retError, $validator->errors()->first());
+        }
+        $user = Auth()->user();
+        $paciente = DB::insert('insert into enfermedades_paciente (paciente_id, enfermedad_id , gravedad_id ,fecha_inicio) values (?, ?)', [$user->id, $request->enfermedad_id, $request->gravedad_id, $request->fecha_inicio]);
+        if ($paciente) {
+            return Response::respuesta(Response::retOK, "Enfermedad registrada correctamente");
+        }
+        return Response::respuesta(Response::retError, "Error al registrar la enfermedad");
+    }
+
+
+
+    /**
+     *
+     *  @OA\Get(path="/api/obtener/enfermedades/paciente",
+     *     tags={"Enfermedades"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Obtiene las enfermedades del paciente",
+     *     operationId="obtenerEnfermedadesPaciente",
+     *     summary="Obtiene las enfermedades del paciente",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna las enfermedades del paciente",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+    public function obtener_enfermedades_paciente()
+    {
+        $user = Auth()->user();
+        $paciente = DB::select('select * from enfermedades_paciente where paciente_id = ?', [$user->id]);
+        if ($paciente) {
+            return Response::respuesta(Response::retOK, $paciente);
+        }
+
+        return Response::respuesta(Response::retError, "Error al obtener las enfermedades");
+    }
+
+    /**
+     * @OA\Put(path="/api/editar/enfermedades/paciente/{id}",
+     *  tags={"Enfermedades"},
+     * security={
+     *         {"token": {}},
+     *    },
+     * summary="Editar enfermedades del paciente",
+     * @OA\Parameter(
+     *   description="ID de la enfermedad del paciente",
+     *  in="path",
+     * name="id",
+     * required=true,
+     * @OA\Schema(
+     *    type="integer",
+     *   format="int64"
+     * )
+     * ),
+     * @OA\RequestBody(
+     *    description="Credenciales de ingreso",
+     *   required=true,
+     *  @OA\MediaType(
+     *        mediaType="application/json",
+     *      @OA\Schema(
+     *           type="object",
+     *         required ={"enfermedad_id","gravedad_id","fecha_inicio"},
+     *        @OA\Property(
+     *              property="enfermedad_id",
+     *            description="Id de la enfermedad",
+     *         type="integer"
+     *      ),
+     *     @OA\Property(
+     *          property="gravedad_id",
+     *        description="Id de la gravedad",
+     *     type="integer"
+     * ),
+     * @OA\Property(
+     *     property="fecha_inicio",
+     *  description="Fecha de inicio de la enfermedad",
+     * type="string",
+     * ),
+     * )
+     * )
+     * ),
+     * @OA\Response(
+     *   response=200,
+     * description="Enfermedad editada correctamente",
+     * @OA\JsonContent(
+     * @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     * @OA\Property(
+     *    property="datos",
+     *  description="Datos del resultado de la api",
+     * type="string",
+     * ),
+     * @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     * @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     * ),
+     * ),
+     * @OA\Response(
+     *  response=404,
+     * description="Recurso no encontrado. La petición no devuelve ningún dato",
+     * ),
+     * @OA\Response(
+     * response=403,
+     * description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     * @OA\JsonContent(
+     * @OA\Property(property ="error",type="string",description="Error")
+     * )
+     * ),
+     * @OA\Response(
+     * response=500,
+     * description="Error de Servidor.",
+     * @OA\JsonContent(
+     * @OA\Property(property ="error",type="string",description="Error de Servidor")
+     * )
+     * ),
+     * )
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+
+    public function editar_enfermedades_paciente(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'enfermedad_id' => 'required|integer',
+            'gravedad_id' => 'required|integer',
+            'fecha_inicio' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::respuesta(Response::retError, $validator->errors()->first());
+        }
+
+        $user = Auth()->user();
+        $paciente = DB::update('update enfermedades_paciente set enfermedad_id = ?, gravedad_id = ?, fecha_inicio = ? where id = ?', [$request->enfermedad_id, $request->gravedad_id, $request->fecha_inicio, $id]);
+
+        if ($paciente) {
+            return Response::respuesta(Response::retOK, "Enfermedad actualizada correctamente");
+        }
+
+        return Response::respuesta(Response::retError, "Error al actualizar la enfermedad");
+    }
+
+    /**
+     * @OA\Delete(path="/api/eliminar/enfermedades/paciente/{id}",
+     *  tags={"Enfermedades"},
+     * security={
+     *        {"token": {}},
+     *  },
+     * summary="Eliminar enfermedades del paciente",
+     * @OA\Parameter(
+     *  description="ID de la enfermedad del paciente",
+     * in="path",
+     * name="id",
+     * required=true,
+     * @OA\Schema(
+     *   type="integer",
+     * format="int64"
+     * )
+     * ),
+     * @OA\Response(
+     * response=200,
+     * 
+     * description="Enfermedad eliminada correctamente",
+     * @OA\JsonContent(
+     * @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     * @OA\Property(
+     *   property="datos",
+     * description="Datos del resultado de la api",
+     * type="string",
+     * ),
+     * @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     * @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     * ),
+     * ),
+     * @OA\Response(
+     * response=404,
+     * description="Recurso no encontrado. La petición no devuelve ningún dato",
+     * ),
+     * @OA\Response(
+     * response=403,
+     * description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     * @OA\JsonContent(
+     * @OA\Property(property ="error",type="string",description="Error")
+     * )
+     * ),
+     * @OA\Response(
+     * response=500,
+     * description="Error de Servidor.",
+     * @OA\JsonContent(
+     * @OA\Property(property ="error",type="string",description="Error de Servidor")
+     * )
+     * ),
+     * )
+     * 
+     * 
+     * 
+     * 
+     */
+
+
+
+    public function eliminar_enfermedades_paciente($id)
+    {
+        $user = Auth()->user();
+        $paciente = DB::delete('delete from enfermedades_paciente where id = ? and paciente_id =? ', [$id, $user->id]);
+
+        if ($paciente) {
+            return Response::respuesta(Response::retOK, "Enfermedad eliminada correctamente");
+        }
+
+        return Response::respuesta(Response::retError, "Error al eliminar la enfermedad");
     }
 }

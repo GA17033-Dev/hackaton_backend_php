@@ -41,6 +41,7 @@ $router->get('api/consultorios', 'CatalogoController@consultorios');
 $router->get('api/medicos', 'CatalogoController@medicos');
 $router->get('api/medicos/especialidad/{id_especialidad}', 'CatalogoController@byEspecialidad');
 $router->get('api/tipos/sangre', 'CatalogoController@tiposSangre');
+$router->get('api/tipos/enfermedades', 'CatalogoController@enfermedades');
 
 ///api/register/paciente
 $router->post('api/register/paciente', 'PacienteController@register');
@@ -51,3 +52,7 @@ $router->get('usuario/profile', ['middleware' => 'Auth', 'uses' => 'UserControll
 $router->get('/', function () use ($router) {
     return 'Api Rest';
 });
+$router->post('api/register/enfermedades', ['middleware' => 'Auth', 'uses' => 'PacienteController@enfermedades_paciente']);
+$router->get('api/obtener/enfermedades/paciente', ['middleware' => 'Auth', 'uses' => 'PacienteController@obtener_enfermedades_paciente']);
+$router->put('api/editar/enfermedades/paciente/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@editar_enfermedades_paciente']);
+$router->delete('api/eliminar/enfermedades/paciente/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@eliminar_enfermedades_paciente']);
