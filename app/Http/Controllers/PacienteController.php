@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Helpers\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Parientes;
 
 class PacienteController extends Controller
 {
@@ -94,8 +95,8 @@ class PacienteController extends Controller
 
     /**
      *
-     *  @OA\Post(path="/api/register/enfermedades",
-     *     tags={"Enfermedades"},
+     *  @OA\Post(path="/api/paciente/register/enfermedades",
+     *     tags={"Paciente"},
      *     description="Registra enfermedades del paciente",
      *     summary="",
      *     operationId="register",
@@ -211,8 +212,8 @@ class PacienteController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/obtener/enfermedades/paciente",
-     *     tags={"Enfermedades"},
+     *  @OA\Get(path="/api/paciente/obtener/enfermedades",
+     *     tags={"Paciente"},
      *     security={
      *          {"token": {}},
      *     },
@@ -273,8 +274,8 @@ class PacienteController extends Controller
     }
 
     /**
-     * @OA\Put(path="/api/editar/enfermedades/paciente/{id}",
-     *  tags={"Enfermedades"},
+     * @OA\Put(path="/api/paciente/editar/enfermedades/{id}",
+     *  tags={"Paciente"},
      * security={
      *         {"token": {}},
      *    },
@@ -389,8 +390,8 @@ class PacienteController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/api/eliminar/enfermedades/paciente/{id}",
-     *  tags={"Enfermedades"},
+     * @OA\Delete(path="/api/paciente/eliminar/enfermedades/{id}",
+     *  tags={"Paciente"},
      * security={
      *        {"token": {}},
      *  },
@@ -453,7 +454,6 @@ class PacienteController extends Controller
 
         $paciente = DB::table('enfermedades_paciente')->where('id', $id)->where('paciente_id', $user->id)->delete();
         // $paciente = DB::delete('delete from enfermedades_paciente where id = ? and paciente_id =? ', [$id, $user->id]);
-
         if ($paciente) {
             return Response::respuesta(Response::retOK, "Enfermedad eliminada correctamente");
         }
@@ -465,8 +465,8 @@ class PacienteController extends Controller
 
     /**
      *
-     *  @OA\Post(path="/api/register/tipo/sangre/paciente",
-     *     tags={"Enfermedades"},
+     *  @OA\Post(path="/api/paciente/register/tipo/sangre",
+     *     tags={"Paciente"},
      *     description="Registro de tipo de sangre del paciente",
      *     summary="Registro de tipo de sangre del paciente",
      *     operationId="registertiposangrepaciente",
@@ -582,5 +582,313 @@ class PacienteController extends Controller
         }
 
         return Response::respuesta(Response::retError, "Error al editar el tipo de sangre");
+    }
+
+
+
+
+
+    /**
+     *
+     *  @OA\Post(path="/api/paciente/register/parientes",
+     *     tags={"Paciente"},
+     *     description="Registro de parientes del paciente",
+     *     summary="Registro de parientes del paciente",
+     *     operationId="registerparientespaciente",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Registro exitoso",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="access_token",
+     *                  type="string",
+     *                  description="Bearer token"
+     *              ),
+     *              @OA\Property(
+     *                  property="token_type",
+     *                  type="string",
+     *                  description="Token type"
+     *              ),
+     *              @OA\Property(
+     *                  property="user",
+     *                  type="string",
+     *                  description="Datos del usuario",
+     *                
+     *              ),
+     *              @OA\Property(
+     *                  property="expires_in",
+     *                  type="integer",
+     *                  description="Duración token"
+     *              ),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Mensaje de error de privilegios insuficientes")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     *
+     *     @OA\RequestBody(
+     *     description="Credenciales de ingreso",
+     *     required=true,
+     *     @OA\MediaType(
+     *         mediaType="application/json",
+     *         @OA\Schema(
+     *             type="object",
+     *             required ={"usuario","password"},
+     *            
+     *             @OA\Property(
+     *                 property="nombre",
+     *                 description="Nombre del pariente",
+     *                 type="string"
+     *             ),
+     *  @OA\Property(
+     *                 property="apellido",
+     *                 description="Apellido del pariente",
+     *                 type="string"
+     *             ),
+     *   @OA\Property(
+     *                 property="telefono",
+     *                 description="Telefono del pariente",
+     *                 type="string"
+     *             ),
+     * @OA\Property(
+     *                 property="parentesco_id",
+     *                 description="ID del parentesco",
+     *                 type="integer"
+     *             ),
+     *     
+
+     * 
+     *         )
+     *     )
+     *  )
+     * )
+     */
+    public function register_parientes(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string',
+            'apellido' => 'required|string',
+            'telefono' => 'required|string',
+            'parentesco_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::respuesta(Response::retError, $validator->errors()->first());
+        }
+        $user = Auth()->user();
+        $pariente = new Parientes();
+        $pariente->nombre = $request->nombre;
+        $pariente->apellido = $request->apellido;
+        $pariente->telefono = $request->telefono;
+        $pariente->parentesco_id = $request->parentesco_id;
+        $pariente->usuario_id = $user->id;
+        $pariente->save();
+
+        if ($pariente) {
+            return Response::respuesta(Response::retOK, "Pariente registrado correctamente");
+        }
+
+        return Response::respuesta(Response::retError, "Error al registrar el pariente");
+    }
+
+
+    /**
+     *
+     * @OA\Put(
+     *     path="/api/paciente/editar/parientes/{id}",
+     *     tags={"Paciente"},
+     *     description="Editar pariente de un paciente",
+     *     summary="Editar pariente de un paciente",
+     *     operationId="editParientePaciente",
+     *     @OA\Parameter(
+     *         name="pacienteId",
+     *         in="path",
+     *         description="ID del paciente",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del pariente",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Pariente actualizado exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Mensaje de éxito"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Solicitud inválida. Verifica los parámetros de entrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", description="Mensaje de error de solicitud inválida")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. El paciente o el pariente no existen",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", description="Mensaje de error de recurso no encontrado")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", description="Error de servidor")
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Datos del pariente a editar",
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="nombre",
+     *                     description="Nombre del pariente",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="apellido",
+     *                     description="Apellido del pariente",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="telefono",
+     *                     description="Teléfono del pariente",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="parentesco_id",
+     *                     description="ID del parentesco",
+     *                     type="integer"
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
+
+
+
+    public function editar_parientes(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string',
+            'apellido' => 'required|string',
+            'telefono' => 'required|string',
+            'parentesco_id' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return Response::respuesta(Response::retError, $validator->errors()->first());
+        }
+        $user = Auth()->user();
+        $pariente = Parientes::where('id', $id)->first();
+        $pariente->nombre = $request->nombre;
+        $pariente->apellido = $request->apellido;
+        $pariente->telefono = $request->telefono;
+        $pariente->parentesco_id = $request->parentesco_id;
+        $pariente->usuario_id = $user->id;
+        $pariente->save();
+
+        if ($pariente) {
+            return Response::respuesta(Response::retOK, "Pariente editado correctamente");
+        }
+
+        return Response::respuesta(Response::retError, "Error al editar el pariente");
+    }
+    /**
+     *
+     *  @OA\Get(path="/api/paciente/obtener/parientes",
+     *     tags={"Paciente"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Obtiene los parientes de un paciente",
+     *     operationId="getParientesPaciente",
+     *     summary="Obtiene los parientes de un paciente",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Parientes obtenidos exitosamente",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+    public function obtener_parientes()
+    {
+        $user = Auth()->user();
+        $parientes = DB::table('parientes')
+            ->join('catalogo_parentesco', 'parientes.parentesco_id', '=', 'catalogo_parentesco.id')
+            ->select('parientes.*', 'catalogo_parentesco.nombre as parentesco')
+            ->where('parientes.usuario_id', $user->id)
+            ->get();
+        if ($parientes) {
+            return Response::respuesta(Response::retOK, $parientes);
+        }
+
+        return Response::respuesta(Response::retError, "Error al obtener los parientes");
     }
 }

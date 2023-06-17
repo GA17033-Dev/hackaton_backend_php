@@ -10,9 +10,62 @@ use Illuminate\Support\Facades\DB;
 class CatalogoController extends Controller
 {
 
+
+        /**
+     *
+     *  @OA\Get(path="/api/catalogo/roles",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve el listado de los roles",
+     *     operationId="rolesid",
+     *     summary="Muestra los roles",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de los roles",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+    public function index()
+    {
+        $roles = DB::table('roles')->get();
+        return Response::respuesta(Response::retOK, $roles);
+    }
+
     /**
      *
-     *  @OA\Get(path="/api/paises",
+     *  @OA\Get(path="/api/catalogo/paises",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -65,7 +118,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/departamentos",
+     *  @OA\Get(path="/api/catalogo/departamentos",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -119,7 +172,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/municipios",
+     *  @OA\Get(path="/api/catalogo/municipios",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -172,7 +225,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/departamento/get/by/id/{id}",
+     *  @OA\Get(path="/api/catalogo/departamento/get/by/id/{id}",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -243,7 +296,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/generos",
+     *  @OA\Get(path="/api/catalogo/generos",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -298,7 +351,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/especialidades",
+     *  @OA\Get(path="/api/catalogo/especialidades",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -355,7 +408,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/consultorios",
+     *  @OA\Get(path="/api/catalogo/consultorios",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -438,7 +491,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/tipos/sangre",
+     *  @OA\Get(path="/api/catalogo/tipos/sangre",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -494,7 +547,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/tipos/enfermedades",
+     *  @OA\Get(path="/api/catalogo/tipos/enfermedades",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -549,7 +602,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/gravedad/enfermedades",
+     *  @OA\Get(path="/api/catalogo/gravedad/enfermedades",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -605,7 +658,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/medicamentos",
+     *  @OA\Get(path="/api/catalogo/medicamentos",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},
@@ -661,7 +714,7 @@ class CatalogoController extends Controller
 
     /**
      *
-     *  @OA\Get(path="/api/parentescos",
+     *  @OA\Get(path="/api/catalogo/parentescos",
      *     tags={"Catalogos"},
      *     security={
      *          {"token": {}},

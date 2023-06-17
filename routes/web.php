@@ -29,23 +29,22 @@ $router->group([
  * Inicio de endpoints de la api que hacen referencia a los catalogos
  */
 
-$router->post('api/register/user', 'UserController@store');
-$router->get('api/roles', 'UserController@index');
-$router->get('api/paises', 'CatalogoController@paises');
-$router->get('api/departamentos', 'CatalogoController@departamentos');
-$router->get('api/municipios', 'CatalogoController@municipios');
-$router->get('api/departamento/get/by/id/{id}', 'CatalogoController@municipiosById');
-$router->get('api/generos', 'CatalogoController@generos');
-$router->get('api/especialidades', 'CatalogoController@especialidades');
-$router->get('api/consultorios', 'CatalogoController@consultorios');
-$router->get('api/medicos', 'CatalogoController@medicos');
-$router->get('api/medicos/especialidad/{id_especialidad}', 'CatalogoController@byEspecialidad');
-$router->get('api/tipos/sangre', 'CatalogoController@tiposSangre');
-$router->get('api/tipos/enfermedades', 'CatalogoController@enfermedades');
-$router->get('api/gravedad/enfermedades', 'CatalogoController@gravedad_enfermedades');
-$router->get('api/medicamentos', 'CatalogoController@medicamentos');
 
-$router->get('api/parentescos', 'CatalogoController@parentesco');
+$router->get('api/catalogo/roles', 'UserController@index');
+$router->get('api/catalogo/paises', 'CatalogoController@paises');
+$router->get('api/catalogo/departamentos', 'CatalogoController@departamentos');
+$router->get('api/catalogo/municipios', 'CatalogoController@municipios');
+$router->get('api/catalogo/departamento/get/by/id/{id}', 'CatalogoController@municipiosById');
+$router->get('api/catalogo/generos', 'CatalogoController@generos');
+$router->get('api/catalogo/especialidades', 'CatalogoController@especialidades');
+$router->get('api/catalogo/consultorios', 'CatalogoController@consultorios');
+$router->get('api/catalogo/medicos', 'CatalogoController@medicos');
+$router->get('api/catalogo/medicos/especialidad/{id_especialidad}', 'CatalogoController@byEspecialidad');
+$router->get('api/catalogo/tipos/sangre', 'CatalogoController@tiposSangre');
+$router->get('api/catalogo/tipos/enfermedades', 'CatalogoController@enfermedades');
+$router->get('api/catalogo/gravedad/enfermedades', 'CatalogoController@gravedad_enfermedades');
+$router->get('api/catalogo/medicamentos', 'CatalogoController@medicamentos');
+$router->get('api/catalogo/parentescos', 'CatalogoController@parentesco');
 
 
 /**
@@ -54,6 +53,7 @@ $router->get('api/parentescos', 'CatalogoController@parentesco');
 
 ///api/register/paciente
 $router->post('api/register/paciente', 'PacienteController@register');
+$router->post('api/register/user', 'UserController@store');
 
 $router->get('email/test', 'UserController@index');
 $router->get('usuario/profile', ['middleware' => 'Auth', 'uses' => 'UserController@profile']);
@@ -61,8 +61,11 @@ $router->get('usuario/profile', ['middleware' => 'Auth', 'uses' => 'UserControll
 $router->get('/', function () use ($router) {
     return 'Api Rest';
 });
-$router->post('api/register/enfermedades', ['middleware' => 'Auth', 'uses' => 'PacienteController@enfermedades_paciente']);
-$router->get('api/obtener/enfermedades/paciente', ['middleware' => 'Auth', 'uses' => 'PacienteController@obtener_enfermedades_paciente']);
-$router->put('api/editar/enfermedades/paciente/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@editar_enfermedades_paciente']);
-$router->delete('api/eliminar/enfermedades/paciente/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@eliminar_enfermedades_paciente']);
-$router->post('api/register/tipo/sangre/paciente', ['middleware' => 'Auth', 'uses' => 'PacienteController@register_tipo_sangre']);
+$router->post('api/paciente/register/enfermedades', ['middleware' => 'Auth', 'uses' => 'PacienteController@enfermedades_paciente']);
+$router->get('api/paciente/obtener/enfermedades', ['middleware' => 'Auth', 'uses' => 'PacienteController@obtener_enfermedades_paciente']);
+$router->put('api/paciente/editar/enfermedades/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@editar_enfermedades_paciente']);
+$router->delete('api/paciente/eliminar/enfermedades/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@eliminar_enfermedades_paciente']);
+$router->post('api/paciente/register/tipo/sangre', ['middleware' => 'Auth', 'uses' => 'PacienteController@register_tipo_sangre']);
+$router->post('api/paciente/register/parientes', ['middleware' => 'Auth', 'uses' => 'PacienteController@register_parientes']);
+$router->put('api/paciente/editar/parientes/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@editar_parientes']);
+$router->get('api/paciente/obtener/parientes', ['middleware' => 'Auth', 'uses' => 'PacienteController@obtener_parientes']);
