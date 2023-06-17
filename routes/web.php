@@ -26,7 +26,7 @@ $router->group([
     $router->post('me', 'AuthController@me');
 });
 /**
- * Controlador usuario
+ * Inicio de endpoints de la api que hacen referencia a los catalogos
  */
 
 $router->post('api/register/user', 'UserController@store');
@@ -42,6 +42,13 @@ $router->get('api/medicos', 'CatalogoController@medicos');
 $router->get('api/medicos/especialidad/{id_especialidad}', 'CatalogoController@byEspecialidad');
 $router->get('api/tipos/sangre', 'CatalogoController@tiposSangre');
 $router->get('api/tipos/enfermedades', 'CatalogoController@enfermedades');
+$router->get('api/gravedad/enfermedades', 'CatalogoController@gravedad_enfermedades');
+$router->get('api/medicamentos', 'CatalogoController@medicamentos');
+
+
+/**
+ * Fin de endpoints de la api que hacen referencia a los catalogos
+ */
 
 ///api/register/paciente
 $router->post('api/register/paciente', 'PacienteController@register');

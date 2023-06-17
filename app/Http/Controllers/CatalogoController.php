@@ -545,4 +545,116 @@ class CatalogoController extends Controller
 
         return Response::respuesta(Response::retOK, $enfermedades);
     }
+
+
+        /**
+     *
+     *  @OA\Get(path="/api/gravedad/enfermedades",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve los tipos de gravedad de las enfermedades",
+     *     operationId="gravedad/enfermedades",
+     *     summary="Muestra los tipos de gravedad de las enfermedades",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de los tipos de gravedad de las enfermedades",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+    public function gravedad_enfermedades()
+    {
+        $gravedad_enfermedades = DB::table('gravedad_enfermedades')->get();
+
+        return Response::respuesta(Response::retOK, $gravedad_enfermedades);
+    }
+
+
+    
+        /**
+     *
+     *  @OA\Get(path="/api/medicamentos",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve el listado de los medicamentos",
+     *     operationId="medicamentos",
+     *     summary="Muestra los medicamentos",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de los medicamentos",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+
+    public function medicamentos()
+    {
+        $medicamentos = DB::table('medicamentos')->get();
+
+        return Response::respuesta(Response::retOK, $medicamentos);
+    }
 }

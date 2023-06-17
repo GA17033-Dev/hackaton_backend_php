@@ -191,7 +191,15 @@ class PacienteController extends Controller
             return Response::respuesta(Response::retError, $validator->errors()->first());
         }
         $user = Auth()->user();
-        $paciente = DB::insert('insert into enfermedades_paciente (paciente_id, enfermedad_id , gravedad_id ,fecha_inicio) values (?, ?)', [$user->id, $request->enfermedad_id, $request->gravedad_id, $request->fecha_inicio]);
+        $paciente = DB::table('enfermedades_paciente')->insert(
+            [
+                'paciente_id' => $user->id,
+                'enfermedad_id' => $request->enfermedad_id,
+                'gravedad_id' => $request->gravedad_id,
+                'fecha_inicio' => $request->fecha_inicio,
+            ]
+        );
+        // $paciente = DB::insert('insert into enfermedades_paciente (paciente_id, enfermedad_id , gravedad_id ,fecha_inicio) values (?, ?)', [$user->id, $request->enfermedad_id, $request->gravedad_id, $request->fecha_inicio]);
         if ($paciente) {
             return Response::respuesta(Response::retOK, "Enfermedad registrada correctamente");
         }
@@ -249,7 +257,13 @@ class PacienteController extends Controller
     public function obtener_enfermedades_paciente()
     {
         $user = Auth()->user();
-        $paciente = DB::select('select * from enfermedades_paciente where paciente_id = ?', [$user->id]);
+        // $paciente = DB::select('select * from enfermedades_paciente where paciente_id = ?', [$user->id]);
+        $paciente = DB::table('enfermedades_paciente')
+            ->join('enfermedades', 'enfermedades_paciente.enfermedad_id', '=', 'enfermedades.id')
+            ->join('gravedad_enfermedades', 'enfermedades_paciente.gravedad_id', '=', 'gravedad_enfermedades.id')
+            ->select('enfermedades_paciente.id', 'enfermedades.nombre as enfermedad', 'gravedad_enfermedades.nombre as gravedad', 'enfermedades_paciente.fecha_inicio')
+            ->where('enfermedades_paciente.paciente_id', '=', $user->id)
+            ->get();
         if ($paciente) {
             return Response::respuesta(Response::retOK, $paciente);
         }
@@ -355,7 +369,16 @@ class PacienteController extends Controller
         }
 
         $user = Auth()->user();
-        $paciente = DB::update('update enfermedades_paciente set enfermedad_id = ?, gravedad_id = ?, fecha_inicio = ? where id = ?', [$request->enfermedad_id, $request->gravedad_id, $request->fecha_inicio, $id]);
+
+        $paciente = DB::table('enfermedades_paciente')
+            ->where('id', $id)
+            ->where('paciente_id', $user->id)
+            ->update([
+                'enfermedad_id' => $request->enfermedad_id,
+                'gravedad_id' => $request->gravedad_id,
+                'fecha_inicio' => $request->fecha_inicio,
+            ]);
+        // $paciente = DB::update('update enfermedades_paciente set enfermedad_id = ?, gravedad_id = ?, fecha_inicio = ? where id = ?', [$request->enfermedad_id, $request->gravedad_id, $request->fecha_inicio, $id]);
 
         if ($paciente) {
             return Response::respuesta(Response::retOK, "Enfermedad actualizada correctamente");
@@ -426,7 +449,9 @@ class PacienteController extends Controller
     public function eliminar_enfermedades_paciente($id)
     {
         $user = Auth()->user();
-        $paciente = DB::delete('delete from enfermedades_paciente where id = ? and paciente_id =? ', [$id, $user->id]);
+
+        $paciente = DB::table('enfermedades_paciente')->where('id', $id)->where('paciente_id', $user->id)->delete();
+        // $paciente = DB::delete('delete from enfermedades_paciente where id = ? and paciente_id =? ', [$id, $user->id]);
 
         if ($paciente) {
             return Response::respuesta(Response::retOK, "Enfermedad eliminada correctamente");
