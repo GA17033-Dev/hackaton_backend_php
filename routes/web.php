@@ -45,6 +45,8 @@ $router->get('api/tipos/enfermedades', 'CatalogoController@enfermedades');
 $router->get('api/gravedad/enfermedades', 'CatalogoController@gravedad_enfermedades');
 $router->get('api/medicamentos', 'CatalogoController@medicamentos');
 
+$router->get('api/parentescos', 'CatalogoController@parentesco');
+
 
 /**
  * Fin de endpoints de la api que hacen referencia a los catalogos
@@ -63,3 +65,4 @@ $router->post('api/register/enfermedades', ['middleware' => 'Auth', 'uses' => 'P
 $router->get('api/obtener/enfermedades/paciente', ['middleware' => 'Auth', 'uses' => 'PacienteController@obtener_enfermedades_paciente']);
 $router->put('api/editar/enfermedades/paciente/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@editar_enfermedades_paciente']);
 $router->delete('api/eliminar/enfermedades/paciente/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@eliminar_enfermedades_paciente']);
+$router->post('api/register/tipo/sangre/paciente', ['middleware' => 'Auth', 'uses' => 'PacienteController@register_tipo_sangre']);

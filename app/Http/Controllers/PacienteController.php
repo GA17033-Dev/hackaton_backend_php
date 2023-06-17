@@ -11,6 +11,7 @@ use App\Models\ConsultoriosDetalle;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\Response;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class PacienteController extends Controller
 {
@@ -458,5 +459,128 @@ class PacienteController extends Controller
         }
 
         return Response::respuesta(Response::retError, "Error al eliminar la enfermedad");
+    }
+
+
+
+    /**
+     *
+     *  @OA\Post(path="/api/register/tipo/sangre/paciente",
+     *     tags={"Enfermedades"},
+     *     description="Registro de tipo de sangre del paciente",
+     *     summary="Registro de tipo de sangre del paciente",
+     *     operationId="registertiposangrepaciente",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Registro exitoso",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="access_token",
+     *                  type="string",
+     *                  description="Bearer token"
+     *              ),
+     *              @OA\Property(
+     *                  property="token_type",
+     *                  type="string",
+     *                  description="Token type"
+     *              ),
+     *              @OA\Property(
+     *                  property="user",
+     *                  type="string",
+     *                  description="Datos del usuario",
+     *                
+     *              ),
+     *              @OA\Property(
+     *                  property="expires_in",
+     *                  type="integer",
+     *                  description="Duración token"
+     *              ),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Mensaje de error de privilegios insuficientes")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     *
+     *     @OA\RequestBody(
+     *     description="Credenciales de ingreso",
+     *     required=true,
+     *     @OA\MediaType(
+     *         mediaType="application/json",
+     *         @OA\Schema(
+     *             type="object",
+     *             required ={"usuario","password"},
+     *            
+     *             @OA\Property(
+     *                 property="tipo_sangre_id",
+     *                 description="ID del tipo de sangre",
+     *                 type="integer"
+     *             ),
+     *     
+
+     * 
+     *         )
+     *     )
+     *  )
+     * )
+     */
+
+
+    public function register_tipo_sangre(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'tipo_sangre_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::respuesta(Response::retError, $validator->errors()->first());
+        }
+        $user = Auth()->user();
+        $tipo_sangre = User::where('id', $user->id)->first();
+        $tipo_sangre->tipo_sangre_id = $request->tipo_sangre_id;
+        $tipo_sangre->save();
+
+        if ($tipo_sangre) {
+            return Response::respuesta(Response::retOK, "Tipo de sangre registrado correctamente");
+        }
+
+        return Response::respuesta(Response::retError, "Error al registrar el tipo de sangre");
+    }
+
+
+    public function editar_tipo_sangre(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'tipo_sangre_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::respuesta(Response::retError, $validator->errors()->first());
+        }
+        $user = Auth()->user();
+        $tipo_sangre = User::where('id', $user->id)->first();
+        $tipo_sangre->tipo_sangre_id = $request->tipo_sangre_id;
+        $tipo_sangre->save();
+
+        if ($tipo_sangre) {
+            return Response::respuesta(Response::retOK, "Tipo de sangre editado correctamente");
+        }
+
+        return Response::respuesta(Response::retError, "Error al editar el tipo de sangre");
     }
 }

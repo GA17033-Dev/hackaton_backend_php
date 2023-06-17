@@ -420,7 +420,7 @@ class CatalogoController extends Controller
 
         return Response::respuesta(Response::retOK, $medicos);
     }
-    
+
 
     public function byEspecialidad($id_especialidad)
     {
@@ -491,7 +491,7 @@ class CatalogoController extends Controller
     }
 
 
-    
+
     /**
      *
      *  @OA\Get(path="/api/tipos/enfermedades",
@@ -547,7 +547,7 @@ class CatalogoController extends Controller
     }
 
 
-        /**
+    /**
      *
      *  @OA\Get(path="/api/gravedad/enfermedades",
      *     tags={"Catalogos"},
@@ -602,8 +602,8 @@ class CatalogoController extends Controller
     }
 
 
-    
-        /**
+
+    /**
      *
      *  @OA\Get(path="/api/medicamentos",
      *     tags={"Catalogos"},
@@ -657,4 +657,62 @@ class CatalogoController extends Controller
 
         return Response::respuesta(Response::retOK, $medicamentos);
     }
+
+
+    /**
+     *
+     *  @OA\Get(path="/api/parentescos",
+     *     tags={"Catalogos"},
+     *     security={
+     *          {"token": {}},
+     *     },
+     *     description="Devuelve el listado de los parentescos",
+     *     operationId="parentescos",
+     *     summary="Muestra los parentescos",
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retorna el listado de los parentescos",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     *              @OA\Property(
+     *                  property="datos",
+     *                  description="Datos del resultado de la api",
+     *                  type="string",
+     *
+     *              ),
+     *              @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     *              @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Recurso no encontrado. La petición no devuelve ningún dato",
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Error de Servidor.",
+     *         @OA\JsonContent(
+     *              @OA\Property(property ="error",type="string",description="Error de Servidor")
+     *         )
+     *     ),
+     * )
+     *
+     */
+
+    public function parentesco()
+    {
+        $parentesco = DB::table('catalogo_parentesco')->get();
+
+        return Response::respuesta(Response::retOK, $parentesco);
+    }
+
+
+    
 }
