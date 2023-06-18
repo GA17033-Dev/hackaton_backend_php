@@ -55,4 +55,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->belongsToMany(Roles::class, 'roles_usuario');
     }
+
+
+    public function tiposangre()
+    {
+       //la llave foranea esta en usuario y es tipo_sangre_id y en en modelo TipoSangre la llave primaria es id
+        return $this->belongsTo(TipoSangre::class, 'tipo_sangre_id', 'id');
+    }
 }

@@ -80,7 +80,8 @@ class UserController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return Response::respuesta(Response::retOK, $user);
+        $profile = User::with('tiposangre')->with('roles')->where('id', $user->id)->first();
+        return Response::respuesta(Response::retOK, $profile);
     }
 
     /**
