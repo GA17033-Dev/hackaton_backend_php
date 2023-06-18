@@ -61,6 +61,9 @@ $router->get('usuario/profile', ['middleware' => 'Auth', 'uses' => 'UserControll
 $router->get('/', function () use ($router) {
     return 'Api Rest';
 });
+/**
+ * Inicio Expediente del usuario
+ */
 $router->post('api/paciente/register/enfermedades', ['middleware' => 'Auth', 'uses' => 'PacienteController@enfermedades_paciente']);
 $router->get('api/paciente/obtener/enfermedades', ['middleware' => 'Auth', 'uses' => 'PacienteController@obtener_enfermedades_paciente']);
 $router->put('api/paciente/editar/enfermedades/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@editar_enfermedades_paciente']);
@@ -69,3 +72,22 @@ $router->post('api/paciente/register/tipo/sangre', ['middleware' => 'Auth', 'use
 $router->post('api/paciente/register/parientes', ['middleware' => 'Auth', 'uses' => 'PacienteController@register_parientes']);
 $router->put('api/paciente/editar/parientes/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@editar_parientes']);
 $router->get('api/paciente/obtener/parientes', ['middleware' => 'Auth', 'uses' => 'PacienteController@obtener_parientes']);
+$router->delete('api/paciente/eliminar/parientes/{id}', ['middleware' => 'Auth', 'uses' => 'PacienteController@delete_pariente']);
+
+/**
+ * Fin Expediente del usuario
+ */
+
+/**
+ * Inicio Cita del paciente
+ */
+
+ $router->post('api/cita/register/cita/paciente', ['middleware' => 'Auth', 'uses' => 'CitaController@register_cita_paciente']);
+ $router->post('api/cita/register/examen/paciente', ['middleware' => 'Auth', 'uses' => 'CitaController@register_cita_paciente_examen']);
+ $router->post('api/cita/register/cita/paciente', ['middleware' => 'Auth', 'uses' => 'CitaController@register_cita_medico']);
+ $router->post('api/cita/obtener/cita/examen', ['middleware' => 'Auth', 'uses' => 'CitaController@obtener_examenes_cita']);
+ $router->post('api/cita/register/resultado/examen', ['middleware' => 'Auth', 'uses' => 'CitaController@register_resultado_examenes']);
+
+ /**
+ * Fin Cita del paciente
+ */

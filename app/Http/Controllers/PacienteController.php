@@ -891,4 +891,77 @@ class PacienteController extends Controller
 
         return Response::respuesta(Response::retError, "Error al obtener los parientes");
     }
+
+
+    /**
+     * @OA\Delete(path="/api/paciente/eliminar/parientes/{id}",
+     *  tags={"Paciente"},
+     * security={
+     *        {"token": {}},
+     *  },
+     * summary="Eliminar pariente del paciente",
+     * @OA\Parameter(
+     *  description="ID del pariente del paciente",
+     * in="path",
+     * name="id",
+     * required=true,
+     * @OA\Schema(
+     *   type="integer",
+     * format="int64"
+     * )
+     * ),
+     * @OA\Response(
+     * response=200,
+     * 
+     * description="Enfermedad eliminada correctamente",
+     * @OA\JsonContent(
+     * @OA\Property(property ="resultado",type="string",description="Estado de resultado"),
+     * @OA\Property(
+     *   property="datos",
+     * description="Datos del resultado de la api",
+     * type="string",
+     * ),
+     * @OA\Property(property ="entregado",type="string",description="Fecha hora de entrega"),
+     * @OA\Property(property ="consumo",type="number",description="Cant. recursos consumidos"),
+     * ),
+     * ),
+     * @OA\Response(
+     * response=404,
+     * description="Recurso no encontrado. La petición no devuelve ningún dato",
+     * ),
+     * @OA\Response(
+     * response=403,
+     * description="Acceso denegado. No se cuenta con los privilegios suficientes",
+     * @OA\JsonContent(
+     * @OA\Property(property ="error",type="string",description="Error")
+     * )
+     * ),
+     * @OA\Response(
+     * response=500,
+     * description="Error de Servidor.",
+     * @OA\JsonContent(
+     * @OA\Property(property ="error",type="string",description="Error de Servidor")
+     * )
+     * ),
+     * )
+     * 
+     * 
+     * 
+     * 
+     */
+
+
+
+    public function delete_pariente($id)
+    {
+        $user = Auth::user();
+        $pariente = Parientes::where('id', $id)->where('usuario_id', $user->id)->first();
+        if ($pariente) {
+            $pariente->delete();
+
+            return Response::respuesta(Response::retOK, 'Pariente Eliminado Correctamente');
+        }
+
+        return Response::respuesta(Response::retError, "Error al Eliminar Pariente");
+    }
 }
