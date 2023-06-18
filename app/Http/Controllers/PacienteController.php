@@ -186,7 +186,7 @@ class PacienteController extends Controller
         $validator = Validator::make($request->all(), [
             'enfermedad_id' => 'required|integer',
             'gravedad' => 'required|string',
-            'fecha_inicio' => 'required|date',
+            'fecha_inicio' => 'required|string',
         ]);
 
         if ($validator->fails()) {
