@@ -262,8 +262,7 @@ class PacienteController extends Controller
         // $paciente = DB::select('select * from enfermedades_paciente where paciente_id = ?', [$user->id]);
         $paciente = DB::table('enfermedades_paciente')
             ->join('enfermedades', 'enfermedades_paciente.enfermedad_id', '=', 'enfermedades.id')
-            ->join('gravedad_enfermedades', 'enfermedades_paciente.gravedad_id', '=', 'gravedad_enfermedades.id')
-            ->select('enfermedades_paciente.id', 'enfermedades.nombre as enfermedad', 'gravedad_enfermedades.nombre as gravedad', 'enfermedades_paciente.fecha_inicio')
+            ->select('enfermedades_paciente.id', 'enfermedades.nombre as enfermedad', 'enfermedades_paciente.gravedad', 'enfermedades_paciente.fecha_inicio')
             ->where('enfermedades_paciente.paciente_id', '=', $user->id)
             ->get();
         if ($paciente) {
