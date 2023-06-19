@@ -197,7 +197,7 @@ class PacienteController extends Controller
             [
                 'paciente_id' => $user->id,
                 'enfermedad_id' => $request->enfermedad_id,
-                'gravedad' => $request->gravedad_id,
+                'gravedad' => $request->gravedad,
                 'fecha_inicio' => $request->fecha_inicio,
             ]
         );
